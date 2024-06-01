@@ -1,0 +1,246 @@
+Documentation for all required database queries for Stoneware
+
+1. GetOutstandingIssues
+--Purpose: retrieves all outstanding issues
+--Parameters: None
+--Ex: EXEC GetOutstandingIssues
+SELECT * FROM issues WHERE status = 'Outstanding'
+
+2. GetOutstandingIssuesP
+--Purpose: Get all oustanding issues for a given product (all versions)
+--Parameters: product
+--Ex: EXEC GetOutstandingIssuesP @Product = 'Investment Overlord'
+SELECT * FROM issues 
+WHERE product = @Product
+AND status = 'Outstanding'
+
+3. GetOutstandingIssuesPV
+--Purpose: Get all outstanding issues for a given product-version combo
+--Parameters: product, version
+--Ex: EXEC GetOutstandingIssuesPV @Product = 'Investment Overlord', @Version = '1.0'
+SELECT * FROM issues 
+WHERE product = @Product 
+AND version = @Version
+AND status = 'Outstanding'
+
+4. GetOutstandingIssuesDaterangeP
+--Purpose: Get all Outstanding Issues within a range of dates for a product
+--Parameters: Product, start date, end date
+--Ex: EXEC GetOutstandingIssuesDaterangeP @StartDate = '2021-01-01', @EndDate = '2022-01-01', @Product = 'Investment Overlord'
+SELECT * FROM issues 
+WHERE product = @Product
+AND status = 'Outstanding'
+AND entryDate >= @StartDate
+AND entryDate <= @EndDate
+
+5. GetOutstandingIssuesDaterangePV
+--Purpose: Get all Outstanding Issues within a range of dates for a product (single version)
+--Parameters: start date, end date, product, version
+--Ex: EXEC GetOutstandingIssuesDaterangePV('2021-01-01', '2022-01-01', 'Investment Overlord', '1.0')
+SELECT * FROM issues 
+WHERE product = @Product
+AND version = @Version
+AND status = 'Outstanding'
+AND entryDate >= @StartDate
+AND entryDate <= @EndDate
+
+6. GetOutstandingIssuesKeywords
+--Purpose: Get all outstanding issues whose description contains at least one provided keyword
+--Parameters: @Keywords: a string of words interspersed with OR operator
+--Ex: EXEC GetOutstandingIssuesKeywords @Keywords = 'slow OR button'
+--NOTE: to get the correct result, please format string like 'w1 OR w2 OR w3 OR ...'
+SELECT * 
+FROM issues
+WHERE status = 'Outstanding'
+AND CONTAINS(description, @Keywords)
+
+7. GetOutstandingIssuesKeywordsP
+--Purpose: Get all outstanding issues whose description contains at least one provided keyword,
+-- for one product
+--Parameters: @Keywords: a string of words interspersed with OR operator, @Product
+--Ex: EXEC GetOutstandingIssuesKeywordsP @Keywords = 'slow OR button' @Product = 'Investment Overlord'
+--NOTE: to get the correct result, please format string like 'w1 OR w2 OR w3 OR ...'
+SELECT * 
+FROM issues
+WHERE status = 'Outstanding'
+AND CONTAINS(description, @Keywords)
+AND product = @Product
+
+8. GetOutstandingIssuesKeywordsPV
+--Purpose: Get all outstanding issues whose description contains at least one provided keyword,
+-- for one version of one product
+--Parameters: @Keywords: a string of words interspersed with OR operator, @Product, @Version
+--Ex: EXEC GetOutstandingIssuesKeywordsPV @Keywords = 'slow OR button', @Product = 'Investment Overlord',
+--@Version = '1.0'
+--NOTE: to get the correct result, please format string like 'w1 OR w2 OR w3 OR ...'
+SELECT * 
+FROM issues
+WHERE status = 'Resolved'
+AND CONTAINS(description, @Keywords)
+AND product = @Product
+AND version = @Version
+
+9. GetOutstandingIssuesKeywordsDaterangeP
+--Purpose: Get all outstanding issues whose description contains at least one provided keyword,
+-- for one product (all versions)
+--Parameters: 
+--@Keywords: a string of words interspersed with OR operator
+--@StartDate, @EndDate: datetimes that define the date range
+--@Product
+--Ex: EXEC GetOutstandingIssuesKeywordsDaterangeP @Keywords = 'slow OR button', 
+--    @StartDate = '2022-01-01', @EndDate = '2024-01-01', 
+--	  @Product = 'Investment Overlord'
+--NOTE: to get the correct result, please format string like 'w1 OR w2 OR w3 OR ...'
+SELECT * 
+FROM issues
+WHERE status = 'Outstanding'
+AND CONTAINS(description, @Keywords)
+AND entryDate >= @StartDate
+AND entryDate <= @EndDate
+AND product = @Product
+
+10. GetOutstandingIssuesKeywordsDaterangePV
+--Purpose: Get all outstanding issues whose description contains at least one provided keyword,
+-- for one version of one product
+--Parameters: 
+--@Keywords: a string of words interspersed with OR operator
+--@StartDate, @EndDate: datetimes that define the date range
+--@Product
+--@Version: version of product
+--Ex: EXEC GetOutstandingIssuesKeywordsDaterangePV @Keywords = 'slow OR button', 
+--    @StartDate = '2022-01-01', @EndDate = '2024-01-01', 
+--	  @Product = 'Investment Overlord', @Version = '1.0'
+--NOTE: to get the correct result, please format string like 'w1 OR w2 OR w3 OR ...'
+SELECT * 
+FROM issues
+WHERE status = 'Outstanding'
+AND CONTAINS(description, @Keywords)
+AND entryDate >= @StartDate
+AND entryDate <= @EndDate
+AND product = @Product
+AND version = @Version
+
+11. GetResolvedIssues
+--Purpose: Get all resolved issues for all products
+--Parameters: None
+--Ex: EXEC GetResolvedIssues
+SELECT * 
+FROM issues 
+WHERE status = 'Resolved'
+
+12. GetResolvedIssuesP
+--Purpose: Get all resolved issues for a given product
+--Parameters: product
+--Ex: EXEC GetResolvedIssuesP @Product = 'Investment Overlord'
+SELECT * 
+FROM issues 
+WHERE product = @Product 
+AND status = 'Resolved'
+
+13. GetResolvedIssuesPV
+--Purpose: Get all resolved issues for a given product-version combo
+--Parameters: product, version
+--Ex: EXEC GetResolvedIssuesPV @Product = 'Investment Overlord', @Version = '1.0'
+SELECT * 
+FROM issues 
+WHERE product = @Product 
+AND version = @Version 
+AND status = 'Resolved'
+
+14. GetResolvedIssuesDaterangeP
+--Purpose: Get all resolved issues within a range of dates for a product
+--Parameters: start date, end date, product
+--Ex: EXEC GetResolvedIssuesDaterangeP @Product = 'Investment Overlord', @StartDate = '2021-01-01', @EndDate = '2022-01-01'
+SELECT * FROM issues 
+WHERE product = @Product
+AND status = 'Resolved'
+AND entryDate >= @StartDate
+AND entryDate <= @EndDate
+
+15. GetResolvedIssuesDaterangePV
+--Purpose: Get all resolved issues within a range of dates for a version of a product
+--Parameters: start date, end date, product, version
+--Ex: EXEC GetResolvedIssuesDaterangePV @StartDate = '2021-01-01', @EndDate = '2022-01-01',  
+--    @Product = 'Investment Overlord', @Version = '1.0'
+SELECT * FROM issues 
+WHERE product = @Product
+AND version = @Version
+AND status = 'Resolved'
+AND entryDate >= @StartDate
+AND entryDate <= @EndDate
+
+16.GetResolvedIssuesKeywords
+--Purpose: Get all resolved issues whose description contains at least one provided keyword
+--Parameters: @Keywords: a string of words interspersed with OR operator
+--Ex: EXEC GetResolvedIssuesKeywords @Keywords = 'slow OR button'
+--NOTE: to get the correct result, please format string like 'w1 OR w2 OR w3 OR ...'
+SELECT * 
+FROM issues
+WHERE status = 'Resolved'
+AND CONTAINS(description, @Keywords)
+
+17. GetResolvedIssuesKeywordsP
+--Purpose: Get all resolved issues whose description contains at least one provided keyword
+-- for one product (all versions)
+--Parameters: @Keywords: a string of words interspersed with OR operator, @Product
+--Ex: EXEC GetResolvedIssuesKeywordsP @Keywords = 'slow OR button', @Product = 'Investment Overlord'
+--NOTE: to get the correct result, please format string like 'w1 OR w2 OR w3 OR ...'
+SELECT * 
+FROM issues
+WHERE status = 'Resolved'
+AND CONTAINS(description, @Keywords)
+AND product = @Product
+
+18. GetResolvedIssuesKeywordsPV
+--Purpose: Get all resolved issues whose description contains at least one provided keyword,
+-- for one version of one product
+--Parameters: @Keywords: a string of words interspersed with OR operator, @Product, @Version
+--Ex: EXEC GetResolvedIssuesKeywordsPV @Keywords = 'slow OR button', @Product = 'Investment Overlord',
+--@Version = '1.0'
+--NOTE: to get the correct result, please format string like 'w1 OR w2 OR w3 OR ...'
+SELECT * 
+FROM issues
+WHERE status = 'Resolved'
+AND CONTAINS(description, @Keywords)
+AND product = @Product
+AND version = @Version
+
+19. GetResolvedIssuesKeywordsDaterangeP
+--Purpose: Get all resolved issues whose description contains at least one provided keyword,
+-- for one product (all versions)
+--Parameters: 
+--@Keywords: a string of words interspersed with OR operator
+--@StartDate, @EndDate: datetimes that define the date range
+--@Product
+--Ex: EXEC GetResolvedIssuesKeywordsDaterangeP @Keywords = 'slow OR button', 
+--    @StartDate = '2022-01-01', @EndDate = '2024-01-01', 
+--	  @Product = 'Investment Overlord'
+--NOTE: to get the correct result, please format string like 'w1 OR w2 OR w3 OR ...'
+SELECT * 
+FROM issues
+WHERE status = 'Resolved'
+AND CONTAINS(description, @Keywords)
+AND entryDate >= @StartDate
+AND entryDate <= @EndDate
+AND product = @Product
+
+20. GetResolvedIssuesKeywordsDaterangePV
+--Purpose: Get all resolved issues whose description contains at least one provided keyword,
+-- for one version of one product
+--Parameters: 
+--@Keywords: a string of words interspersed with OR operator
+--@StartDate, @EndDate: datetimes that define the date range
+--@Product
+--@Version: version of product
+--Ex: EXEC GetResolvedIssuesKeywordsDaterangePV @Keywords = 'slow OR button', 
+--    @StartDate = '2022-01-01', @EndDate = '2024-01-01', 
+--	  @Product = 'Investment Overlord', @Version = '1.0'
+--NOTE: to get the correct result, please format string like 'w1 OR w2 OR w3 OR ...'
+SELECT * 
+FROM issues
+WHERE status = 'Resolved'
+AND CONTAINS(description, @Keywords)
+AND entryDate >= @StartDate
+AND entryDate <= @EndDate
+AND product = @Product
+AND version = @Version
