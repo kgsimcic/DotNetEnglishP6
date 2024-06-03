@@ -4,13 +4,32 @@ Documentation for all required database queries for Stoneware
 --Purpose: retrieves all outstanding issues
 --Parameters: None
 --Ex: EXEC GetOutstandingIssues
-SELECT * FROM issues WHERE status = 'Outstanding'
+SELECT issueID,
+product,
+version,
+os,
+status,
+description,
+resolution,
+entryDate
+FROM issues i
+JOIN productVersionInfo p ON i.prodVersionID = p.prodVersionID
+WHERE status = 'Outstanding'
 
 2. GetOutstandingIssuesP
 --Purpose: Get all oustanding issues for a given product (all versions)
---Parameters: product
+--Parameters: product type
 --Ex: EXEC GetOutstandingIssuesP @Product = 'Investment Overlord'
-SELECT * FROM issues 
+SELECT issueID,
+product,
+version,
+os,
+status,
+description,
+resolution,
+entryDate
+FROM issues i
+JOIN productVersionInfo p ON i.prodVersionID = p.prodVersionID
 WHERE product = @Product
 AND status = 'Outstanding'
 
@@ -18,7 +37,16 @@ AND status = 'Outstanding'
 --Purpose: Get all outstanding issues for a given product-version combo
 --Parameters: product, version
 --Ex: EXEC GetOutstandingIssuesPV @Product = 'Investment Overlord', @Version = '1.0'
-SELECT * FROM issues 
+SELECT issueID,
+product,
+version,
+os,
+status,
+description,
+resolution,
+entryDate
+FROM issues i
+JOIN productVersionInfo p ON i.prodVersionID = p.prodVersionID
 WHERE product = @Product 
 AND version = @Version
 AND status = 'Outstanding'
@@ -26,8 +54,17 @@ AND status = 'Outstanding'
 4. GetOutstandingIssuesDaterangeP
 --Purpose: Get all Outstanding Issues within a range of dates for a product
 --Parameters: Product, start date, end date
---Ex: EXEC GetOutstandingIssuesDaterangeP @StartDate = '2021-01-01', @EndDate = '2022-01-01', @Product = 'Investment Overlord'
-SELECT * FROM issues 
+--Ex: EXEC GetOutstandingIssuesDaterangeP @Product = 'Investment Overlord', @StartDate = '2021-01-01', @EndDate = '2022-01-01'
+SELECT issueID,
+product,
+version,
+os,
+status,
+description,
+resolution,
+entryDate
+FROM issues i
+JOIN productVersionInfo p ON i.prodVersionID = p.prodVersionID 
 WHERE product = @Product
 AND status = 'Outstanding'
 AND entryDate >= @StartDate
@@ -36,8 +73,17 @@ AND entryDate <= @EndDate
 5. GetOutstandingIssuesDaterangePV
 --Purpose: Get all Outstanding Issues within a range of dates for a product (single version)
 --Parameters: start date, end date, product, version
---Ex: EXEC GetOutstandingIssuesDaterangePV('2021-01-01', '2022-01-01', 'Investment Overlord', '1.0')
-SELECT * FROM issues 
+--Ex: EXEC GetOutstandingIssuesDaterangePV @Product = 'Investment Overlord', @Version = '1.0', @StartDate = '2022-01-01', @EndDate = '2024-06-01'
+SELECT issueID,
+product,
+version,
+os,
+status,
+description,
+resolution,
+entryDate
+FROM issues i
+JOIN productVersionInfo p ON i.prodVersionID = p.prodVersionID
 WHERE product = @Product
 AND version = @Version
 AND status = 'Outstanding'
@@ -49,8 +95,16 @@ AND entryDate <= @EndDate
 --Parameters: @Keywords: a string of words interspersed with OR operator
 --Ex: EXEC GetOutstandingIssuesKeywords @Keywords = 'slow OR button'
 --NOTE: to get the correct result, please format string like 'w1 OR w2 OR w3 OR ...'
-SELECT * 
-FROM issues
+SELECT issueID,
+product,
+version,
+os,
+status,
+description,
+resolution,
+entryDate
+FROM issues i
+JOIN productVersionInfo p ON i.prodVersionID = p.prodVersionID
 WHERE status = 'Outstanding'
 AND CONTAINS(description, @Keywords)
 
@@ -58,10 +112,18 @@ AND CONTAINS(description, @Keywords)
 --Purpose: Get all outstanding issues whose description contains at least one provided keyword,
 -- for one product
 --Parameters: @Keywords: a string of words interspersed with OR operator, @Product
---Ex: EXEC GetOutstandingIssuesKeywordsP @Keywords = 'slow OR button' @Product = 'Investment Overlord'
+--Ex: EXEC GetOutstandingIssuesKeywordsP @Keywords = 'User', @Product = 'Investment Overlord'
 --NOTE: to get the correct result, please format string like 'w1 OR w2 OR w3 OR ...'
-SELECT * 
-FROM issues
+SELECT issueID,
+product,
+version,
+os,
+status,
+description,
+resolution,
+entryDate
+FROM issues i
+JOIN productVersionInfo p ON i.prodVersionID = p.prodVersionID
 WHERE status = 'Outstanding'
 AND CONTAINS(description, @Keywords)
 AND product = @Product
@@ -70,12 +132,20 @@ AND product = @Product
 --Purpose: Get all outstanding issues whose description contains at least one provided keyword,
 -- for one version of one product
 --Parameters: @Keywords: a string of words interspersed with OR operator, @Product, @Version
---Ex: EXEC GetOutstandingIssuesKeywordsPV @Keywords = 'slow OR button', @Product = 'Investment Overlord',
+--Ex: EXEC GetOutstandingIssuesKeywordsPV @Keywords = 'User', @Product = 'Investment Overlord',
 --@Version = '1.0'
 --NOTE: to get the correct result, please format string like 'w1 OR w2 OR w3 OR ...'
-SELECT * 
-FROM issues
-WHERE status = 'Resolved'
+SELECT issueID,
+product,
+version,
+os,
+status,
+description,
+resolution,
+entryDate
+FROM issues i
+JOIN productVersionInfo p ON i.prodVersionID = p.prodVersionID
+WHERE status = 'Outstanding'
 AND CONTAINS(description, @Keywords)
 AND product = @Product
 AND version = @Version
@@ -124,16 +194,32 @@ AND version = @Version
 --Purpose: Get all resolved issues for all products
 --Parameters: None
 --Ex: EXEC GetResolvedIssues
-SELECT * 
-FROM issues 
+SELECT issueID,
+product,
+version,
+os,
+status,
+description,
+resolution,
+entryDate
+FROM issues i
+JOIN productVersionInfo p ON i.prodVersionID = p.prodVersionID
 WHERE status = 'Resolved'
 
 12. GetResolvedIssuesP
 --Purpose: Get all resolved issues for a given product
 --Parameters: product
 --Ex: EXEC GetResolvedIssuesP @Product = 'Investment Overlord'
-SELECT * 
-FROM issues 
+SELECT issueID,
+product,
+version,
+os,
+status,
+description,
+resolution,
+entryDate
+FROM issues i
+JOIN productVersionInfo p ON i.prodVersionID = p.prodVersionID
 WHERE product = @Product 
 AND status = 'Resolved'
 
@@ -141,8 +227,16 @@ AND status = 'Resolved'
 --Purpose: Get all resolved issues for a given product-version combo
 --Parameters: product, version
 --Ex: EXEC GetResolvedIssuesPV @Product = 'Investment Overlord', @Version = '1.0'
-SELECT * 
-FROM issues 
+SELECT issueID,
+product,
+version,
+os,
+status,
+description,
+resolution,
+entryDate
+FROM issues i
+JOIN productVersionInfo p ON i.prodVersionID = p.prodVersionID
 WHERE product = @Product 
 AND version = @Version 
 AND status = 'Resolved'
@@ -150,8 +244,17 @@ AND status = 'Resolved'
 14. GetResolvedIssuesDaterangeP
 --Purpose: Get all resolved issues within a range of dates for a product
 --Parameters: start date, end date, product
---Ex: EXEC GetResolvedIssuesDaterangeP @Product = 'Investment Overlord', @StartDate = '2021-01-01', @EndDate = '2022-01-01'
-SELECT * FROM issues 
+--Ex: EXEC GetResolvedIssuesDaterangeP @StartDate = '2022-01-01', @EndDate = '2024-01-01', @Product = 'Investment Overlord'
+SELECT issueID,
+product,
+version,
+os,
+status,
+description,
+resolution,
+entryDate
+FROM issues i
+JOIN productVersionInfo p ON i.prodVersionID = p.prodVersionID
 WHERE product = @Product
 AND status = 'Resolved'
 AND entryDate >= @StartDate
@@ -162,7 +265,16 @@ AND entryDate <= @EndDate
 --Parameters: start date, end date, product, version
 --Ex: EXEC GetResolvedIssuesDaterangePV @StartDate = '2021-01-01', @EndDate = '2022-01-01',  
 --    @Product = 'Investment Overlord', @Version = '1.0'
-SELECT * FROM issues 
+SELECT issueID,
+product,
+version,
+os,
+status,
+description,
+resolution,
+entryDate
+FROM issues i
+JOIN productVersionInfo p ON i.prodVersionID = p.prodVersionID
 WHERE product = @Product
 AND version = @Version
 AND status = 'Resolved'
@@ -170,43 +282,70 @@ AND entryDate >= @StartDate
 AND entryDate <= @EndDate
 
 16.GetResolvedIssuesKeywords
---Purpose: Get all resolved issues whose description contains at least one provided keyword
+--Purpose: Get all resolved issues whose description or resolution contains at least one provided keyword
 --Parameters: @Keywords: a string of words interspersed with OR operator
 --Ex: EXEC GetResolvedIssuesKeywords @Keywords = 'slow OR button'
 --NOTE: to get the correct result, please format string like 'w1 OR w2 OR w3 OR ...'
-SELECT * 
-FROM issues
+SELECT issueID,
+product,
+version,
+os,
+status,
+description,
+resolution,
+entryDate
+FROM issues i
+JOIN productVersionInfo p ON i.prodVersionID = p.prodVersionID
 WHERE status = 'Resolved'
 AND CONTAINS(description, @Keywords)
+OR CONTAINS(resolution, @Keywords)
 
 17. GetResolvedIssuesKeywordsP
---Purpose: Get all resolved issues whose description contains at least one provided keyword
+--Purpose: Get all resolved issues whose description or resolution contains at least one provided keyword
 -- for one product (all versions)
 --Parameters: @Keywords: a string of words interspersed with OR operator, @Product
---Ex: EXEC GetResolvedIssuesKeywordsP @Keywords = 'slow OR button', @Product = 'Investment Overlord'
+--Ex: EXEC GetResolvedIssuesKeywordsP @Keywords = 'slow OR button', @Product = 'Day Trader Wannabe'
 --NOTE: to get the correct result, please format string like 'w1 OR w2 OR w3 OR ...'
-SELECT * 
-FROM issues
+SELECT issueID,
+product,
+version,
+os,
+status,
+description,
+resolution,
+entryDate
+FROM issues i
+JOIN productVersionInfo p ON i.prodVersionID = p.prodVersionID
 WHERE status = 'Resolved'
-AND CONTAINS(description, @Keywords)
+AND (CONTAINS(description, @Keywords)
+OR CONTAINS(resolution, @Keywords))
 AND product = @Product
 
 18. GetResolvedIssuesKeywordsPV
---Purpose: Get all resolved issues whose description contains at least one provided keyword,
+--Purpose: Get all resolved issues whose description or resolution contains at least one provided keyword,
 -- for one version of one product
 --Parameters: @Keywords: a string of words interspersed with OR operator, @Product, @Version
---Ex: EXEC GetResolvedIssuesKeywordsPV @Keywords = 'slow OR button', @Product = 'Investment Overlord',
+--Ex: EXEC GetResolvedIssuesKeywordsPV @Keywords = 'slow OR button', @Product = 'Day Trader Wannabe',
 --@Version = '1.0'
 --NOTE: to get the correct result, please format string like 'w1 OR w2 OR w3 OR ...'
-SELECT * 
-FROM issues
+SELECT issueID,
+product,
+version,
+os,
+status,
+description,
+resolution,
+entryDate
+FROM issues i
+JOIN productVersionInfo p ON i.prodVersionID = p.prodVersionID
 WHERE status = 'Resolved'
-AND CONTAINS(description, @Keywords)
+AND (CONTAINS(description, @Keywords)
+OR CONTAINS(resolution, @Keywords))
 AND product = @Product
 AND version = @Version
 
 19. GetResolvedIssuesKeywordsDaterangeP
---Purpose: Get all resolved issues whose description contains at least one provided keyword,
+--Purpose: Get all resolved issues whose description or resolution contains at least one provided keyword,
 -- for one product (all versions)
 --Parameters: 
 --@Keywords: a string of words interspersed with OR operator
@@ -214,18 +353,27 @@ AND version = @Version
 --@Product
 --Ex: EXEC GetResolvedIssuesKeywordsDaterangeP @Keywords = 'slow OR button', 
 --    @StartDate = '2022-01-01', @EndDate = '2024-01-01', 
---	  @Product = 'Investment Overlord'
+--	  @Product = 'Day Trader Wannabe'
 --NOTE: to get the correct result, please format string like 'w1 OR w2 OR w3 OR ...'
-SELECT * 
-FROM issues
+SELECT issueID,
+product,
+version,
+os,
+status,
+description,
+resolution,
+entryDate
+FROM issues i
+JOIN productVersionInfo p ON i.prodVersionID = p.prodVersionID
 WHERE status = 'Resolved'
-AND CONTAINS(description, @Keywords)
+AND (CONTAINS(description, @Keywords)
+OR CONTAINS(resolution, @Keywords))
 AND entryDate >= @StartDate
 AND entryDate <= @EndDate
 AND product = @Product
 
 20. GetResolvedIssuesKeywordsDaterangePV
---Purpose: Get all resolved issues whose description contains at least one provided keyword,
+--Purpose: Get all resolved issues whose description or resolution contains at least one provided keyword,
 -- for one version of one product
 --Parameters: 
 --@Keywords: a string of words interspersed with OR operator
@@ -234,12 +382,21 @@ AND product = @Product
 --@Version: version of product
 --Ex: EXEC GetResolvedIssuesKeywordsDaterangePV @Keywords = 'slow OR button', 
 --    @StartDate = '2022-01-01', @EndDate = '2024-01-01', 
---	  @Product = 'Investment Overlord', @Version = '1.0'
+--	  @Product = 'Day Trader Wannabe', @Version = '1.0'
 --NOTE: to get the correct result, please format string like 'w1 OR w2 OR w3 OR ...'
-SELECT * 
-FROM issues
+SELECT issueID,
+product,
+version,
+os,
+status,
+description,
+resolution,
+entryDate
+FROM issues i
+JOIN productVersionInfo p ON i.prodVersionID = p.prodVersionID
 WHERE status = 'Resolved'
-AND CONTAINS(description, @Keywords)
+AND (CONTAINS(description, @Keywords)
+OR CONTAINS(resolution, @Keywords))
 AND entryDate >= @StartDate
 AND entryDate <= @EndDate
 AND product = @Product
